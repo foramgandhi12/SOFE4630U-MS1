@@ -5,9 +5,9 @@ import json
 
 # Read arguments and configurations and initialize
 admin_client_conf = json.load(open('cred.json'))
-topic= "<topicname>"
+topic= "testTopic2"
 num_partitions=6
-replication_factor=3;
+replication_factor=3
 
 a = AdminClient(admin_client_conf)
 

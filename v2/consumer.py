@@ -4,7 +4,7 @@ import json
 
 # Read arguments and configurations and initialize
 consumer_conf = json.load(open('cred.json'))
-topic= "<topicname>"
+topic= "smartMeter"
 
 # Create Consumer instance
 # 'auto.offset.reset=earliest' to start reading from the beginning of the

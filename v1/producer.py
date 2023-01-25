@@ -5,7 +5,7 @@ import random
 # Read arguments and configurations and initialize
 producer_conf = json.load(open('cred.json'))
 producer = Producer(producer_conf)
-topic= "<topicname>"
+topic= "testTopic2"
 
 # Optional per-message on_delivery handler (triggered by poll() or flush())
 # when a message has been successfully delivered or
@@ -26,7 +26,7 @@ for n in range(100):
     partition = int(input())
     
     if(partition<-1):
-        break;
+        break
         
     print("Producing record: {}\t{}".format(record_key, record_value))
     producer.produce(topic, key=record_key, value=record_value,partition=partition, on_delivery=acked)

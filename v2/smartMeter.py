@@ -7,7 +7,7 @@ import numpy as np
 # Read arguments and configurations and initialize
 producer_conf = json.load(open('cred.json'))
 producer = Producer(producer_conf)
-topic= "<topicname>"
+topic= "smartMeter"
 
 #device normal distributions profile used to generate random data
 DEVICE_PROFILES = {
@@ -15,7 +15,7 @@ DEVICE_PROFILES = {
 	"denver": {'temp': (49.5, 19.3), 'humd': (33.0, 13.9), 'pres': (1.512, 0.341) },
 	"losang": {'temp': (63.9, 11.7), 'humd': (62.8, 21.8), 'pres': (1.215, 0.201) },
 }
-profileNames=["boston","denver","losang"];
+profileNames=["boston","denver","losang"]
 
 # Optional per-message on_delivery handler (triggered by poll() or flush())
 # when a message has been successfully delivered or
@@ -30,7 +30,7 @@ def acked(err, msg):
 record_key=0
 while(True):
     try:    
-        profile_name = profileNames[random.randint(0, 2)];
+        profile_name = profileNames[random.randint(0, 2)]
         profile = DEVICE_PROFILES[profile_name]
         # get random values within a normal distribution of the value
         temp = max(0, np.random.normal(profile['temp'][0], profile['temp'][1]))
@@ -38,27 +38,27 @@ while(True):
         pres = max(0, np.random.normal(profile['pres'][0], profile['pres'][1]))
         
         # create dictionary
-        msg={"time": time.time(), "profile_name": profile_name, "temperature": temp,"humidity": humd, "pressure":pres};
+        msg={"time": time.time(), "profile_name": profile_name, "temperature": temp,"humidity": humd, "pressure":pres}
         
         #randomly eliminate some measurements
         for i in range(3):
             if(random.randrange(0,10)<1):
                 choice=random.randrange(0,3)
                 if(choice==0):
-                    msg['temperature']=None;
+                    msg['temperature']=None
                 elif (choice==1):
-                    msg['humidity']=None;
+                    msg['humidity']=None
                 else:
-                    msg['pressure']=None;
-        record_key=record_key+1;
-        record_value=json.dumps(msg);
+                    msg['pressure']=None
+        record_key=record_key+1
+        record_value=json.dumps(msg)
 
         producer.produce(topic, key=str(record_key), value=record_value, on_delivery=acked)
         # p.poll() serves delivery reports (on_delivery) from previous produce() calls.
         producer.poll(0)
         time.sleep(.5)
     except KeyboardInterrupt:
-        break;
+        break
 producer.flush()
 
 print("{} messages were produced to topic {}!".format(delivered_records, topic))
